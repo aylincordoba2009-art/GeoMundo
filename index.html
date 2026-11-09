@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoMundo - Conociendo el entorno, salvamos al mundo</title>
+    <style>
+        /* Estilos generales de la página */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #1e293b;
+            color: white;
+            text-align: center;
+            padding: 2.5rem 1rem;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.8rem;
+        }
+
+        .header-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 24px;
+            background-color: #10b981;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .header-btn:hover {
+            background-color: #059669;
+            transform: translateY(-2px);
+        }
+
+        main {
+            max-width: 950px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        section {
+            background: white;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        h2, h3, h4 {
+            color: #2563eb;
+            margin-top: 0;
+        }
+
+        .cta-box {
+            background-color: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .cta-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #2563eb;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        .cta-link:hover {
+            text-decoration: underline;
+        }
+
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.2rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+        }
+
+        .card h5 {
+            margin: 0 0 8px 0;
+            font-size: 1.1rem;
+            color: #1e293b;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 450px;
+        }
+
+        input, textarea, button {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-family: inherit;
+        }
+
+        button[type="submit"] {
+            background-color: #2563eb;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #1d4ed8;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background: #1e293b;
+            color: white;
+            margin-top: 2rem;
+        }
+
+        /* ESTILOS DEL CHATBOT INTEGRADO */
+        .chatbot-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .chatbot-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .chatbot-window {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 370px;
+            height: 500px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        .chatbot-header {
+            background-color: #2563eb;
+            color: white;
+            padding: 12px 15px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background-color: #f8fafc;
+        }
+
+        .msg {
+            padding: 10px 14px;
+            border-radius: 12px;
+            max-width: 85%;
+            font-size: 13.5px;
+            line-height: 1.45;
+        }
+
+        .msg-bot {
+            background-color: #e2e8f0;
+            color: #1e293b;
+            align-self: flex-start;
+        }
+
+        .msg-user {
+            background-color: #2563eb;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .msg-bot a {
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        .chatbot-input-area {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        .chatbot-input-area input {
+            flex: 1;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 8px;
+        }
+
+        .chatbot-input-area button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            margin-left: 6px;
+            cursor: pointer;
+            padding: 8px 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Encabezado -->
+    <header>
+        <h1>GeoMundo</h1>
+        <p><em>Conociendo el entorno, salvamos al mundo</em></p>
+        <a href="https://aylincordoba2009-art.github.io/GeoMapa/" target="_blank" class="header-btn">🌍 Jugar Ahora: GeoMapa</a>
+    </header>
+
+    <main>
+        <!-- Sección: Nuestra Historia -->
+        <section id="historia">
+            <h2>Cómo nació GeoMapa</h2>
+            <p>La idea de GeoMapa surgió en el salón de clases mientras estudiábamos geografía. Nos dimos cuenta de que aprenderse las capitales y las banderas de memoria en mapas de papel aburría a cualquiera y casi nadie se acordaba de nada después del examen. Queríamos una forma más entretenida de aprender, así que decidimos combinar la tecnología con los videojuegos para crear nuestra propia solución.</p>
+            <p>Pensamos en un juego de velocidad contra el reloj donde el mapa del mundo estuviera totalmente en blanco. La idea era que pudieras elegir un continente y empezar a arrastrar las tarjetas con nombres de capitales o banderas hasta su lugar correcto. Si le atinas, el país se pinta con su bandera oficial; pero si te equivocas, la pantalla vibra y te lanza un destello rojo para que te pellizques y lo intentes de nuevo rápidamente.</p>
+            <p>Así nació nuestro producto estrella, <strong>GeoMapa</strong>. Al final de cada partida puedes ver tu tiempo, competir con tus compañeros de clase a ver quién tiene el mejor récord y, sin darte cuenta, aprenderte la geografía del mundo mientras juegas.</p>
+        </section>
+
+        <!-- Sección: Descripción del Producto -->
+        <section id="producto">
+            <h2>¿Qué es GeoMapa?</h2>
+            <p>GeoMapa es una plataforma web y software educativo interactivo. Consiste en un mapa global mudo donde pones a prueba tus conocimientos ubicando la capital o bandera correspondiente en el menor tiempo posible para sumar la máxima puntuación.</p>
+            
+            <div class="cta-box">
+                <p style="margin: 0 0 8px 0; font-weight: 500;">¡Empieza la aventura y pon a prueba tus conocimientos ahora mismo!</p>
+                <a href="https://aylincordoba2009-art.github.io/GeoMapa/" target="_blank" class="cta-link">
+                    🚀 GeoMapa - Juego Interactivo Satelital
+                </a>
+            </div>
+        </section>
+
+        <!-- Sección: Problemas a Resolver -->
+        <section id="problemas">
+            <h2>¿Qué problemas resuelve GeoMapa?</h2>
+            <p>En el modelo educativo tradicional, la enseñanza de la geografía suele enfrentarse a barreras metodológicas que limitan el interés y el aprendizaje significativo de los estudiantes. <strong>GeoMapa</strong> aborda directamente estas problemáticas mediante tecnología interactiva:</p>
+            
+            <div class="grid-cards">
+                <div class="card">
+                    <h5>1. Monotonía y Pasividad Escolar</h5>
+                    <p>Sustituye la memorización repetitiva de mapas impresos planos por una experiencia de aprendizaje gamificada, activa y competitiva que mantiene la motivación alta.</p>
+                </div>
+                <div class="card">
+                    <h5>2. Desconexión Espacial y Territorial</h5>
+                    <p>Resuelve la dificultad para asociar nombres de países o capitales con su ubicación real en el globo terráqueo mediante navegación vectorial y satelital dinámica.</p>
+                </div>
+                <div class="card">
+                    <h5>3. Ausencia de Feedback Inmediato</h5>
+                    <p>Elimina la incertidumbre durante el estudio individual proporcionando validación instantánea en cada intento para corregir errores al momento.</p>
+                </div>
+                <div class="card">
+                    <h5>4. Brecha con Herramientas Digitales</h5>
+                    <p>Moderniza las aulas superando los métodos analógicos obsoletos al integrar interfaces interactivas estándar HTML5, JavaScript y mapas en vivo.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección: Beneficios del Producto -->
+        <section id="beneficios">
+            <h2>Beneficios de GeoMapa</h2>
+            <p>Al utilizar nuestra plataforma interactiva, estudiantes, docentes y entusiastas de la geografía obtienen ventajas clave para el desarrollo cognitivo y la gestión del conocimiento:</p>
+            
+            <div class="grid-cards">
+                <div class="card">
+                    <h5>🎮 Gamificación Efectiva</h5>
+                    <p>Convierte el estudio en un reto lúdico contra el reloj que fomenta la superación personal, incrementa la atención y mejora la retención de memoria a largo plazo.</p>
+                </div>
+                <div class="card">
+                    <h5>⚡ Retroalimentación Instantánea</h5>
+                    <p>El sistema valida cada arrastre inmediatamente mediante animaciones y sonido, permitiendo aprender activamente a través del ensayo y error.</p>
+                </div>
+                <div class="card">
+                    <h5>🧠 Memoria Visoespacial</h5>
+                    <p>Refuerza la capacidad de ubicar puntos cardinales, límites fronterizos y coordenadas al manipular tarjetas interactivas directamente sobre la geografía real.</p>
+                </div>
+                <div class="card">
+                    <h5>🚀 Agilidad Mental y Toma de Decisiones</h5>
+                    <p>El cronómetro integrado estimula la rapidez de pensamiento, obligando al jugador a procesar información geográfica bajo presión de tiempo.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección: Formulario de Contacto -->
+        <section id="contacto">
+            <h2>Contáctanos</h2>
+            <form>
+                <label for="nombreusuario">Ingrese su nombre:</label>
+                <input type="text" id="nombreusuario" name="nombreusuario" required placeholder="Tu nombre completo">
+
+                <label for="correo">Ingrese su Correo:</label>
+                <input type="email" id="correo" name="correo" required placeholder="ejemplo@correo.com">
+
+                <label for="mensaje">Envíanos un mensaje:</label>
+                <textarea id="mensaje" name="mensaje" rows="4" required placeholder="¿En qué podemos ayudarte?"></textarea>
+
+                <button type="submit">Registrar</button>
+            </form>
+        </section>
+    </main>
+
+    <!-- Pie de página -->
+    <footer>
+        <p>&copy; 2026 GeoMundo. Todos los derechos reservados.</p>
+        <p>Creadores / Cofundadores: Juan Camilo Marmolejo Mena y Ailin Nahely Córdoba Mena</p>
+    </footer>
+
+    <!-- INTERFAZ DEL CHATBOT INTELIGENTE -->
+    <button class="chatbot-toggle" id="botToggle" onclick="toggleChat()">💬</button>
+
+    <div class="chatbot-window" id="botWindow">
+        <div class="chatbot-header">
+            <span>🌐 GeoBot Autocorrect (Enciclopedia)</span>
+            <button class="chatbot-close" onclick="toggleChat()">✖</button>
+        </div>
+        <div class="chatbot-messages" id="botMessages">
+            <div class="msg msg-bot">¡Hola! 👋 Soy GeoBot Mundial con Autocorrector. Puedes escribir incluso con errores de ortografía (ej: <em>"colobia"</em>, <em>"tokyo"</em>, <em>"nizeria"</em>) y corregiré tu pregunta automáticamente.</div>
+        </div>
+        <div class="chatbot-input-area">
+            <input type="text" id="userInput" placeholder="Escribe un país, capital o consulta..." onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()">Enviar</button>
+        </div>
+    </div>
+
+    <!-- MOTOR ENCICLOPÉDICO CON SISTEMA DE AUTOCORRECCIÓN Y CORRECCIÓN DE MALA ESCRITURA -->
+    <script>
+        const JUEGO_URL = "https://aylincordoba2009-art.github.io/GeoMapa/";
+
+        const enciclopediaGlobal = {
+             // Suramérica
+            "colombia": { cap: "Bogotá", cont: "Suramérica", desc: "República bicontinental del noroccidente de Sudamérica, famosa por su biodiversidad, café y cultura." },
+            "argentina": { cap: "Buenos Aires", cont: "Suramérica", desc: "Nación del Cono Sur destacada por el tango, la Patagonia y la Cordillera de los Andes." },
+            "brasil": { cap: "Brasilia", cont: "Suramérica", desc: "El país más grande de Sudamérica, célebre por la selva amazónica y el Carnaval." },
+            "chile": { cap: "Santiago", cont: "Suramérica", desc: "País largo y estrecho que bordea el Océano Pacífico y los Andes." },
+            "peru": { cap: "Lima", cont: "Suramérica", desc: "Nación andina e incaica, hogar de la maravilla mundial Machu Picchu." },
+            "ecuador": { cap: "Quito", cont: "Suramérica", desc: "País atravesado por la línea ecuatorial, famoso por las Islas Galápagos." },
+            "venezuela": { cap: "Caracas", cont: "Suramérica", desc: "Nación caribeña de Sudamérica con inmensas reservas petroleras y el Salto Ángel." },
+            "bolivia": { cap: "Sucre / La Paz", cont: "Suramérica", desc: "Estado plurinacional andino conocido por el Salar de Uyuni." },
+            "paraguay": { cap: "Asunción", cont: "Suramérica", desc: "País mediterráneo del centro de Sudamérica, bilingüe con el guaraní." },
+            "uruguay": { cap: "Montevideo", cont: "Suramérica", desc: "Nación del Cono Sur destacada por su alta calidad de vida y costas al Atlántico." },
+            "guyana": { cap: "Georgetown", cont: "Suramérica", desc: "País angloparlante de la costa norte sudamericana." },
+            "surinam": { cap: "Paramaribo", cont: "Suramérica", desc: "El país más pequeño de Sudamérica, de habla neerlandesa." },
+
+            // América del Norte y Central / Caribe
+            "mexico": { cap: "Ciudad de México", cont: "América del Norte", desc: "Nación con rica Herencia azteca y maya, mundialmente famosa por su gastronomía." },
+            "estados unidos": { cap: "Washington D.C.", cont: "América del Norte", desc: "Potencia económica y cultural de América del Norte." },
+            "canada": { cap: "Ottawa", cont: "América del Norte", desc: "El segundo país más extenso del mundo, reconocido por sus bosques y lagos." },
+            "guatemala": { cap: "Ciudad de Guatemala", cont: "América Central", desc: "Corazón del mundo maya con impresionantes volcanes y lagos." },
+            "costa rica": { cap: "San José", cont: "América Central", desc: "Pionero mundial en ecoturismo y conservación de la biodiversidad." },
+            "panama": { cap: "Ciudad de Panamá", cont: "América Central", desc: "Famoso por su canal interoceánico que conecta el Atlántico y el Pacífico." },
+            "cuba": { cap: "La Habana", cont: "El Caribe", desc: "La isla más grande del Caribe, rica en historia y cultura musical." },
+            "dominicana": { cap: "Santo Domingo", cont: "El Caribe", desc: "Ubicada en La Española, famosa por sus playas y el merengue." },
+
+            // Europa
+            "españa": { cap: "Madrid", cont: "Europa", desc: "Nación peninsular europea de gran historia, arte y gastronomía." },
+            "francia": { cap: "París", cont: "Europa", desc: "Referente cultural, gastronómico y turístico global, hogar de la Torre Eiffel." },
+            "alemania": { cap: "Berlín", cont: "Europa", desc: "Motor económico de Europa Central con gran peso histórico e industrial." },
+            "italia": { cap: "Roma", cont: "Europa", desc: "Cuna del antiguo Imperio Romano y del Renacimiento." },
+            "reino unido": { cap: "Londres", cont: "Europa", desc: "Estado insular europeo compuesto por Inglaterra, Escocia, Gales e Irlanda del Norte." },
+            "portugal": { cap: "Lisboa", cont: "Europa", desc: "Nación atlántica de navegantes, famosa por sus costas y el fado." },
+            "suiza": { cap: "Berna", cont: "Europa", desc: "País alpino famoso por su neutralidad, relojes y chocolates." },
+            "holanda": { cap: "Ámsterdam", cont: "Europa", desc: "Conocido oficialmente como Países Bajos, famoso por sus canales y tulipanes." },
+            "paises bajos": { cap: "Ámsterdam", cont: "Europa", desc: "Nación europea célebre por sus molinos, tulipanes y ciclismo urbano." },
+            "rusia": { cap: "Moscú", cont: "Europa/Asia", desc: "El país más extenso del planeta, abarcando dos continentes." },
+            "grecia": { cap: "Atenas", cont: "Europa", desc: "Cuna de la democracia, la filosofía y la civilización occidental." },
+
+           // ==================== ASIA CENTRAL (5 PAÍSES) ====================
+            "kazajistan": { cap: "Astana", cont: "Asia (Asia Central)", desc: "El noveno país más grande del mundo y el Estado sin litoral más extenso del planeta." },
+            "uzbekistan": { cap: "Taskent", cont: "Asia (Asia Central)", desc: "Nación del centro asiático célebre por sus ciudades históricas de la Ruta de la Seda como Samarcanda." },
+            "turkmenistan": { cap: "Asgabat", cont: "Asia (Asia Central)", desc: "País dominado por el desierto de Karakum y célebre por el cráter de gas de Darvaza." },
+            "kirguistan": { cap: "Biskek", cont: "Asia (Asia Central)", desc: "Nación montañosa dominada por la cordillera Tian Shan y tradiciones nómadas." },
+            "tayikistan": { cap: "Dusalbe", cont: "Asia (Asia Central)", desc: "Estado sin litoral de Asia Central cubierto casi en su totalidad por las montañas del Pamir." },
+
+            // ==================== ASIA ORIENTAL (5 PAÍSES) ====================
+            "china": { cap: "Pekin", cont: "Asia (Asia Oriental)", desc: "Gigante asiático con una de las civilizaciones más antiguas del mundo y la Gran Muralla." },
+            "japon": { cap: "Tokio", cont: "Asia (Asia Oriental)", desc: "Archipiélago insular de alta tecnología, cultura milenaria y cuna del anime." },
+            "corea del sur": { cap: "Seul", cont: "Asia (Asia Oriental)", desc: "Potencia tecnológica global famosa por su vibrante cultura contemporánea y K-Pop." },
+            "corea del norte": { cap: "Pionyang", cont: "Asia (Asia Oriental)", desc: "Estado de Asia Oriental situado en la mitad norte de la península de Corea." },
+            "mongolia": { cap: "Llan Bator", cont: "Asia (Asia Oriental)", desc: "Nación del desierto de Gobi famosa por sus extensas estepas e historia de Genghis Khan." },
+
+            // ==================== ASIA MERIDIONAL / SUR DE ASIA (8 PAÍSES) ====================
+            "india": { cap: "Nueva Delhi", cont: "Asia (Asia Meridional)", desc: "Nación del sur de Asia famosa por su inmensa biodiversidad, espiritualidad y el Taj Mahal." },
+            "pakistan": { cap: "Islamabad", cont: "Asia (Asia Meridional)", desc: "País del valle del Indo que alberga picos legendarios como el K2." },
+            "bangladesh": { cap: "Daca", cont: "Asia (Asia Meridional)", desc: "Ubicado en el inmenso delta del Ganges y el Brahmaputra, conocido por su industria textil." },
+            "nepal": { cap: "Katmandu", cont: "Asia (Asia Meridional)", desc: "Nación del Himalaya que alberga el Monte Everest y la única bandera nacional no rectangular." },
+            "sri lanka": { cap: "Sri Jayawardenepura Kotte", cont: "Asia (Asia Meridional)", desc: "Isla del Océano Índico famosa por sus plantaciones de té, templos y playas." },
+            "butan": { cap: "Timbu", cont: "Asia (Asia Meridional)", desc: "Reino del Himalaya famoso por medir la Felicidad Interna Bruta de su población." },
+            "afganistan": { cap: "Cabul", cont: "Asia (Asia Meridional)", desc: "Nación montañosa sin litoral ubicada en la encrucijada estratégica del centro y sur de Asia." },
+            "maldivas": { cap: "Male", cont: "Asia (Asia Meridional)", desc: "Estado insular tropical formado por 26 atolones de coral en el Océano Índico." },
+
+            // ==================== SUDESTE ASIÁTICO (11 PAÍSES) ====================
+            "indonesia": { cap: "Yakarta", cont: "Asia (Sudeste Asiático)", desc: "El mayor país insular del planeta, compuesto por más de 17.000 islas tropicales." },
+            "filipinas": { cap: "Manila", cont: "Asia (Sudeste Asiático)", desc: "Archipiélago del Pacífico occidental formado por más de 7.000 islas de gran biodiversidad." },
+            "vietnam": { cap: "Hanoi", cont: "Asia (Sudeste Asiático)", desc: "Nación indochina conocida por sus bahías cársticas, arrozales e historia resiliente." },
+            "tailandia": { cap: "Bangkok", cont: "Asia (Sudeste Asiático)", desc: "Reino célebre por sus templos budistas, gastronomía exótica y playas tropicales." },
+            "birmania": { cap: "Naypyidaw", cont: "Asia (Sudeste Asiático)", desc: "Conocido también como Myanmar, famoso por miles de pagodas antiguas en Bagan." },
+            "malasia": { cap: "Kuala Lumpur", cont: "Asia (Sudeste Asiático)", desc: "Nación dividida en península y selvas en Borneo, conocida por las Torres Petronas." },
+            "singapur": { cap: "Singapur", cont: "Asia (Sudeste Asiático)", desc: "Ciudad-Estado insular y centro financiero mundial reconocido por su orden y tecnología." },
+            "camboya": { cap: "Nom Pen", cont: "Asia (Sudeste Asiático)", desc: "Famoso por albergar el monumental complejo de templos religiosos de Angkor Wat." },
+            "laos": { cap: "Vientian", cont: "Asia (Sudeste Asiático)", desc: "El único país sin salida al mar del Sudeste Asiático, atravesado por el río Mekong." },
+            "timor oriental": { cap: "Dili", cont: "Asia (Sudeste Asiático)", desc: "Nación lusófona ubicada en la mitad oriental de la isla de Timor." },
+            "brunei": { cap: "Bandar Seri Begawan", cont: "Asia (Sudeste Asiático)", desc: "Sultanato de la isla de Borneo rico en recursos de petróleo y gas natural." },
+
+            // ==================== ASIA OCCIDENTAL / ORIENTE MEDIO (19 PAÍSES) ====================
+            "arabia saudita": { cap: "Riad", cont: "Asia (Asia Occidental)", desc: "Nación de la península arábiga y centro histórico y espiritual del Islam." },
+            "irak": { cap: "Bagdad", cont: "Asia (Asia Occidental)", desc: "Cuna de la antigua Mesopotamia entre los ríos Tigris y Éufrates." },
+            "iran": { cap: "Teheran", cont: "Asia (Asia Occidental)", desc: "Estado de rica herencia histórica derivado del antiguo Imperio Persa." },
+            "turquia": { cap: "Ankara", cont: "Asia (Asia Occidental)", desc: "Nación transcontinental entre Europa y Asia con inmenso legado patrimonial." },
+            "israel": { cap: "Jerusalen", cont: "Asia (Asia Occidental)", desc: "Estado mediterráneo de Asia Occidental y centro espiritual de tres religiones." },
+            "jordania": { cap: "Aman", cont: "Asia (Asia Occidental)", desc: "Hogar de la maravilla arqueológica de Petra y el mar Muerto." },
+            "siria": { cap: "Damasco", cont: "Asia (Asia Occidental)", desc: "Nación levantina cuya capital es una de las ciudades habitadas más antiguas del mundo." },
+            "libano": { cap: "Beirut", cont: "Asia (Asia Occidental)", desc: "Nación costera del mar Mediterráneo célebre por su historia fenicia y cedros." },
+            "emiratos arabes unidos": { cap: "Abu Dabi", cont: "Asia (Asia Occidental)", desc: "Federación de siete emiratos famosa por la arquitectura futurista de Dubái." },
+            "catar": { cap: "Doha", cont: "Asia (Asia Occidental)", desc: "Península del golfo Pérsico con elevados ingresos per cápita por gas natural." },
+            "kuwait": { cap: "Ciudad de Kuwait", cont: "Asia (Asia Occidental)", desc: "Emirato del golfo Pérsico con grandes reservas mundiales de petróleo." },
+            "oman": { cap: "Mascate", cont: "Asia (Asia Occidental)", desc: "Sultanato en el extremo de la península arábiga famoso por sus fiordos y wadis." },
+            "yemen": { cap: "Sana", cont: "Asia (Asia Occidental)", desc: "Nación del sur arábigo de arquitectura tradicional en barro y piedra." },
+            "barein": { cap: "Manama", cont: "Asia (Asia Occidental)", desc: "Estado insular formado por un archipiélago en el golfo Pérsico." },
+            "chipre": { cap: "Nicosia", cont: "Asia (Asia Occidental)", desc: "Isla mediterránea geográficamente ubicada en Asia Occidental y culturalmente europea." },
+            "georgia": { cap: "Tiflis", cont: "Asia (Asia Occidental)", desc: "Nación del Cáucaso entre Europa y Asia famosa por su tradición vinícola." },
+            "armenia": { cap: "Erevan", cont: "Asia (Asia Occidental)", desc: "País del Cáucaso sin litoral, primera nación en adoptar el cristianismo como religión oficial." },
+            "azerbaiyan": { cap: "Bacu", cont: "Asia (Asia Occidental)", desc: "Nación junto al mar Caspio conocida como la Tierra del Fuego." },
+            "palestina": { cap: "Jerusalen Este", cont: "Asia (Asia Occidental)", desc: "Territorio con reconocimiento internacional ubicado en la región histórica del Levante." },
+
+            // África y Oceanía
+            "egipto": { cap: "El Cairo", cont: "África (África del Norte)", desc: "Nación milenaria famosa por el río Nilo, el canal de Suez y las Pirámides de Guiza." },
+            "argelia": { cap: "Argel", cont: "África (África del Norte)", desc: "El país más grande de África en superficie, caracterizado por su costa mediterránea y el desierto del Sahara." },
+            "marruecos": { cap: "Rabat", cont: "África (África del Norte)", desc: "Reino del norte de África que fusiona la cultura árabe, bereber y europea en el estrecho de Gibraltar." },
+            "tunez": { cap: "Túnez", cont: "África (África del Norte)", desc: "País del norte africano famoso por sus ruinas de Cartago y su litoral mediterráneo." },
+            "libia": { cap: "Trípoli", cont: "África (África del Norte)", desc: "Nación magrebí rica en recursos petroleros con extensa costa en el mar Mediterráneo." },
+            "sudan": { cap: "Jartum", cont: "África (África del Norte)", desc: "País bañado por la confluencia del Nilo Blanco y el Nilo Azul." },
+            "mauritania": { cap: "Nuakchot", cont: "África (África del Norte)", desc: "Nación puente entre el Magreb y el África subsahariana en el desierto del Sahara." },
+            "nigeria": { cap: "Abuya", cont: "África (África Occidental)", desc: "El país más poblado de África y gigante económico famoso por su industria cultural y petrolera." },
+            "ghana": { cap: "Acra", cont: "África (África Occidental)", desc: "País del golfo de Guinea conocido por su historia de la Costa de Oro y la producción de cacao." },
+            "senegal": { cap: "Dakar", cont: "África (África Occidental)", desc: "Nación costera del extremo oeste de África famosa por su hospitalidad ('Teranga') y su música." },
+            "costa de marfil": { cap: "Yamusukro", cont: "África (África Occidental)", desc: "Primer productor mundial de cacao situado en la costa occidental africana." },
+            "mali": { cap: "Bamako", cont: "África (África Occidental)", desc: "País sin litoral en el Sahel con gran herencia de los antiguos imperios de Tombuctú." },
+            "niger": { cap: "Niamey", cont: "África (África Occidental)", desc: "Nación interior saheliana rica en yacimientos de uranio." },
+            "burkina faso": { cap: "Uagadugú", cont: "África (África Occidental)", desc: "País saheliano del oeste africano conocido por su gran tradición artesanal." },
+            "guinea": { cap: "Conakri", cont: "África (África Occidental)", desc: "Nación rica en bauxita y naciente de importantes ríos como el Níger." },
+            "benin": { cap: "Porto Novo", cont: "África (África Occidental)", desc: "Cuna histórica del antiguo reino de Dahomey." },
+            "togo": { cap: "Lomé", cont: "África (África Occidental)", desc: "Estrecha franja territorial en el golfo de Guinea con hermosas playas." },
+            "sierra leona": { cap: "Freetown", cont: "África (África Occidental)", desc: "Nación costera conocida por sus puertos naturales y riqueza mineral." },
+            "liberia": { cap: "Monrovia", cont: "África (África Occidental)", desc: "La república independiente más antigua de África fundada en el siglo XIX." },
+            "gambia": { cap: "Banjul", cont: "África (África Occidental)", desc: "El país continental más pequeño de África rodeado casi totalmente por Senegal." },
+            "guinea bissau": { cap: "Bisáu", cont: "África (África Occidental)", desc: "Nación lusófona en la costa atlántica famosa por el archipiélago de los Bijagós." },
+            "cabo verde": { cap: "Praia", cont: "África (África Occidental)", desc: "Archipiélago insular volcánico atlántico de cultura criolla y pacífica." },
+            "republica democratica del congo": { cap: "Kinsasa", cont: "África (África Central)", desc: "El segundo país más extenso de África, poseedor de la inmensa cuenca del río Congo." },
+            "congo": { cap: "Brazzaville", cont: "África (África Central)", desc: "Nación atlántica de África Central cubierta por densas selvas tropicales." },
+            "camerun": { cap: "Yaundé", cont: "África (África Central)", desc: "Llamado 'África en miniatura' por su enorme diversidad geográfica y cultural." },
+            "angola": { cap: "Luanda", cont: "África (África Central)", desc: "Nación lusófona rica en petróleo y diamantes en el suroeste central de África." },
+            "gabon": { cap: "Libreville", cont: "África (África Central)", desc: "País ecuatorial célebre por conservar gran parte de su territorio como parques nacionales." },
+            "guinea ecuatorial": { cap: "Malabo", cont: "África (África Central)", desc: "Único país africano donde el español es idioma oficial junto con el francés y portugués." },
+            "republica centroafricana": { cap: "Bangui", cont: "África (África Central)", desc: "País interior situado en el corazón geográfico del continente." },
+            "chad": { cap: "Yamena", cont: "África (África Central)", desc: "Nación saheliana conocida por el histórico lago Chad." },
+            "santo tome y principe": { cap: "Santo Tomé", cont: "África (África Central)", desc: "Pequeño estado insular ecuatorial en el golfo de Guinea." },
+            "kenia": { cap: "Nairobi", cont: "África (África Oriental)", desc: "Famoso mundialmente por sus reservas naturales, safaris y el Gran Valle del Rift." },
+            "tanzania": { cap: "Dodoma", cont: "África (África Oriental)", desc: "Hogar del parque Serengeti, la mítica isla de Zanzíbar y el monte Kilimanjaro." },
+            "etiopia": { cap: "Adís Abeba", cont: "África (África Oriental)", desc: "La nación independiente más antigua de África, sede central de la Unión Africana." },
+            "uganda": { cap: "Kampala", cont: "África (África Oriental)", desc: "Conocida como la 'Perla de África', famosa por sus montañas y lagos ecuatoriales." },
+            "ruanda": { cap: "Kigali", cont: "África (África Oriental)", desc: "La 'Tierra de las Mil Colinas', reconocida por su orden y progreso tecnológico." },
+            "somalia": { cap: "Mogadiscio", cont: "África (África Oriental)", desc: "Nación situada en el Cuerno de África con la línea de costa más larga del continente." },
+            "mozambique": { cap: "Maputo", cont: "África (África Oriental)", desc: "País de habla portuguesa con extensas playas en el canal de Mozambique." },
+            "madagascar": { cap: "Antananarivo", cont: "África (África Oriental)", desc: "La gran isla del Océano Índico famosa por sus baobabs y su biodiversidad endémica." },
+            "sudan del sur": { cap: "Juba", cont: "África (África Oriental)", desc: "El país soberano más joven del planeta creado en 2011." },
+            "burundi": { cap: "Gitega", cont: "África (África Oriental)", desc: "Pequeño país sin litoral de la región de los Grandes Lagos africanos." },
+            "yibuti": { cap: "Yibuti", cont: "África (África Oriental)", desc: "Estratégico país del Cuerno de África en la entrada al mar Rojo." },
+            "eritrea": { cap: "Asmara", cont: "África (África Oriental)", desc: "Nación del mar Rojo caracterizada por su arquitectura colonial italiana." },
+            "malaui": { cap: "Lilongüe", cont: "África (África Oriental)", desc: "Conocido como el 'Cálido Corazón de África', dominado por el inmenso lago Malaui." },
+            "zambia": { cap: "Lusaka", cont: "África (África Oriental)", desc: "Famoso por albergar las espectaculares Cataratas Victoria junto al río Zambeze." },
+            "zimbabue": { cap: "Harare", cont: "África (África Oriental)", desc: "Nación sin litoral rica en ruinas históricas como el Gran Zimbabue." },
+            "mauricio": { cap: "Port Louis", cont: "África (África Oriental)", desc: "Estado insular del Índico destacado por sus arrecifes de coral y playas." },
+            "comoras": { cap: "Moroni", cont: "África (África Oriental)", desc: "Archipiélago volcánico de cultura islámica en el canal de Mozambique." },
+            "sechelles": { cap: "Victoria", cont: "África (África Oriental)", desc: "Archipiélago de 115 islas conocido por su turismo exclusivo y reservas naturales." },
+            "sudafrica": { cap: "Pretoria / Ciudad del Cabo", cont: "África (África del Sur)", desc: "La 'Nación Arcoíris', potencia económica del sur africano con inmensa diversidad." },
+            "namibia": { cap: "Windhoek", cont: "África (África del Sur)", desc: "Famosa por el desierto del Namib, la Costa de los Esqueletos y sus dunas rojas." },
+            "botsuana": { cap: "Gaborone", cont: "África (África del Sur)", desc: "Destacada por el delta del Okavango y la conservación del desierto del Kalahari." },
+            "lesoto": { cap: "Maseru", cont: "África (África del Sur)", desc: "Reino enclavado totalmente dentro del territorio de Sudáfrica en grandes alturas." },
+            "esuatini": { cap: "Mbabane", cont: "África (África del Sur)", desc: "Pequeña monarquía absoluta conocida anteriormente como Suazilandia." },
+            "australia": { cap: "Canberra", cont: "Oceanía (Australasia)", desc: "El país más grande de Oceanía, célebre por la Gran Barrera de Coral y su fauna endémica como canguros y koalas." },
+            "nueva zelanda": { cap: "Wellington", cont: "Oceanía (Polinesia/Australasia)", desc: "Nación insular famosa por sus paisajes naturales, fiordos, géiseres y la rica cultura maorí." },
+            "papua nueva guinea": { cap: "Puerto Moresby", cont: "Oceanía (Melanesia)", desc: "Nación diversa de Oceanía caracterizada por sus selvas tropicales y cientos de lenguas indígenas." },
+            "fiyi": { cap: "Suva", cont: "Oceanía (Melanesia)", desc: "Archipiélago paradisíaco del Pacífico del Sur conocido por sus lagunas de agua cristalina y arrecifes de coral." },
+            "islas salomon": { cap: "Honiara", cont: "Oceanía (Melanesia)", desc: "Nación insular formada por cientos de islas de volcánicas en el Pacífico suroccidental." },
+            "vanuatu": { cap: "Port Vila", cont: "Oceanía (Melanesia)", desc: "Archipiélago del Pacífico célebre por sus volcanes activos y ricas tradiciones ancestrales." },
+            "samoa": { cap: "Apia", cont: "Oceanía (Polinesia)", desc: "Nación insular de la Polinesia reconocida por su cultura tradicional Fa'a Samoa y bosques tropicales." },
+            "tonga": { cap: "Nukualofa", cont: "Oceanía (Polinesia)", desc: "Reino de Oceanía conocido como 'Las Islas Amistosas', compuesto por más de 170 islas." },
+            "kiribati": { cap: "Tarawa del Sur", cont: "Oceanía (Micronesia)", desc: "Nación insular del Pacífico central distribuida en 33 atolones sobre la línea del ecuador." },
+            "micronesia": { cap: "Palikir", cont: "Oceanía (Micronesia)", desc: "Estado compuesto por 607 islas divididas en cuatro estados insulares en el Pacífico occidental." },
+            "palaos": { cap: "Ngerulmud", cont: "Oceanía (Micronesia)", desc: "Pionero global en conservación marina, famoso por sus lagos de medusas y arrecifes espectaculares." },
+            "islas marshall": { cap: "Majuro", cont: "Oceanía (Micronesia)", desc: "Nación micronesia formada por dos cadenas paralelas de atolones de coral." },
+            "nauru": { cap: "Yaren (de facto)", cont: "Oceanía (Micronesia)", desc: "La república independiente más pequeña del mundo, ubicada al sur de las Islas Marshall." },
+            "tuvalu": { cap: "Funafuti", cont: "Oceanía (Polinesia)", desc: "Una de las naciones más pequeñas y de menor altitud del planeta, formada por nueve atolones." },
+
+        };
+
+        // ALGORITMO DE DISTANCIA DE LEVENSHTEIN (Para tolerancia a errores de ortografía)
+        function calcularLevenshtein(a, b) {
+            const matrix = [];
+            for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+            for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+
+            for (let i = 1; i <= b.length; i++) {
+                for (let j = 1; j <= a.length; j++) {
+                    if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                        matrix[i][j] = matrix[i - 1][j - 1];
+                    } else {
+                        matrix[i][j] = Math.min(
+                            matrix[i - 1][j - 1] + 1,
+                            matrix[i][j - 1] + 1,
+                            matrix[i - 1][j] + 1
+                        );
+                    }
+                }
+            }
+            return matrix[b.length][a.length];
+        }
+
+        // LIMPIEZA Y NORMALIZACIÓN DE TEXTO
+        function normalizarTexto(txt) {
+            return txt.normalize("NFD")
+                      .replace(/[\u0300-\u036f]/g, "")
+                      .toLowerCase()
+                      .replace(/[^a-z0-9 ]/g, "")
+                      .trim();
+        }
+
+        function toggleChat() {
+            const win = document.getElementById('botWindow');
+            win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const txt = input.value.trim();
+            if (!txt) return;
+
+            addMessage(txt, 'msg-user');
+            input.value = '';
+
+            setTimeout(() => {
+                const reply = procesarConsulta(txt);
+                addMessage(reply, 'msg-bot');
+            }, 300);
+        }
+
+        function addMessage(text, className) {
+            const box = document.getElementById('botMessages');
+            const div = document.createElement('div');
+            div.className = `msg ${className}`;
+            div.innerHTML = text;
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function procesarConsulta(queryOriginal) {
+    const q = normalizarTexto(queryOriginal);
+
+    // 1. Preguntas institucionales, creadores o del juego
+    if (q.includes('hola') || q.includes('buenas')) {
+        return `¡Hola! 👋 Soy GeoBot con Autocorrector. Pregúntame sobre cualquier país o capital aunque no recuerdes cómo se escribe exacto (ej: <em>"colobia"</em>, <em>"katmandu"</em>, <em>"nizeria"</em>). ¡O juega en <a href='${JUEGO_URL}' target='_blank'>GeoMapa Live</a>!`;
+    }
+    if (q.includes('jugar') || q.includes('juego') || q.includes('link') || q.includes('enlace')) {
+        return `¡Accede a la plataforma interactiva en un clic! 👉 <a href='${JUEGO_URL}' target='_blank'>GeoMapa - Juego Interactivo Satelital</a>`;
+    }
+    if (q.includes('que es') && (q.includes('geomapa') || q.includes('geomundo'))) {
+        return `GeoMapa es una plataforma web interactiva para aprender geografía jugando. Pruébala en: <a href='${JUEGO_URL}' target='_blank'>GeoMapa Satelital</a>`;
+    }
+    if (q.includes('creador') || q.includes('fundador') || q.includes('quien creo') || q.includes('quien')) {
+        return "GeoMundo fue creado y fundado por Juan Camilo Marmolejo Mena y Ailin Nahely Córdoba Mena.";
+    }
+    if (q.includes('beneficio') || q.includes('ventaja')) {
+        return "Los beneficios principales son: Gamificación efectiva, retroalimentación instantánea, estímulo visoespacial y agilidad mental con cronómetro.";
+    }
+    if (q.includes('problema') || q.includes('resuelve')) {
+        return "GeoMapa resuelve la monotonía escolar, la falta de retención espacial, la incertidumbre al estudiar y la brecha digital en el aula.";
+    }
+    if (q.includes('contacto') || q.includes('correo') || q.includes('mensaje')) {
+        return "Puedes dejarnos tu mensaje usando el formulario de contacto ubicado al final de esta página.";
+    }
+
+    // 2. BÚSQUEDA DIRECTA POR COINCIDENCIA EXACTA O PARCIAL
+    for (let pais in enciclopediaGlobal) {
+        if (q.includes(pais)) {
+            return generarRespuestaPais(pais);
+        }
+    }
+
+    for (let pais in enciclopediaGlobal) {
+        const capLimpia = normalizarTexto(enciclopediaGlobal[pais].cap);
+        if (q.includes(capLimpia) && capLimpia.length > 2) {
+            return generarRespuestaCapital(pais);
+        }
+    }
+
+    // 3. AUTOCORRECTOR INTELIGENTE (Búsqueda por similitud de palabras)
+    const palabras = q.split(" ");
+    let mejorCoincidenciaPais = null;
+    let mejorCoincidenciaCapital = null;
+    let menorDistancia = 99;
+
+    for (let palabra of palabras) {
+        if (palabra.length < 3) continue;
+
+        // Probar contra Países
+        for (let pais in enciclopediaGlobal) {
+            const dist = calcularLevenshtein(palabra, pais);
+            if (dist <= 2 && dist < menorDistancia) {
+                menorDistancia = dist;
+                mejorCoincidenciaPais = pais;
+            }
+        }
+
+        // Probar contra Capitales
+        for (let pais in enciclopediaGlobal) {
+            const capLimpia = normalizarTexto(enciclopediaGlobal[pais].cap);
+            const dist = calcularLevenshtein(palabra, capLimpia);
+            if (dist <= 2 && dist < menorDistancia) {
+                menorDistancia = dist;
+                mejorCoincidenciaCapital = pais;
+                mejorCoincidenciaPais = null;
+            }
+        }
+    }
+
+    // Si encontró una corrección lógica por error tipográfico:
+    if (mejorCoincidenciaPais) {
+        const nombreFormateado = mejorCoincidenciaPais.charAt(0).toUpperCase() + mejorCoincidenciaPais.slice(1);
+        return `💡 <em>¿Quisiste decir <strong>${nombreFormateado}</strong>?</em><br><br>` + generarRespuestaPais(mejorCoincidenciaPais);
+    }
+
+    if (mejorCoincidenciaCapital) {
+        const capNombre = enciclopediaGlobal[mejorCoincidenciaCapital].cap;
+        return `💡 <em>¿Quisiste decir <strong>${capNombre}</strong>?</em><br><br>` + generarRespuestaCapital(mejorCoincidenciaCapital);
+    }
+
+    // 4. Mensaje si la palabra es irreconocible
+    return `No logré reconocer esa consulta ni con la autocorrección. Intenta buscando nombres aproximados de países (ej: <em>"Colobia"</em>, <em>"Tokyo"</em>) o entra a jugar en: <a href='${JUEGO_URL}' target='_blank'>GeoMapa Satelital</a>.`;
+}
+
+        function generarRespuestaPais(paisKey) {
+            const info = enciclopediaGlobal[paisKey];
+            const nombreFormateado = paisKey.charAt(0).toUpperCase() + paisKey.slice(1);
+            return `📌 <strong>País:</strong> ${nombreFormateado}<br>
+                    🏛️ <strong>Capital:</strong> ${info.cap}<br>
+                    🌍 <strong>Continente/Región:</strong> ${info.cont}<br>
+                    📖 <strong>Concepto:</strong> ${info.desc}<br><br>
+                    👉 <a href='${JUEGO_URL}' target='_blank'>Ubicar a ${nombreFormateado} en GeoMapa</a>`;
+        }
+
+        function generarRespuestaCapital(paisKey) {
+            const info = enciclopediaGlobal[paisKey];
+            const nombreFormateado = paisKey.charAt(0).toUpperCase() + paisKey.slice(1);
+            return `🏛️ La ciudad de <strong>${info.cap}</strong> es la capital oficial de <strong>${nombreFormateado}</strong> (${info.cont}).<br>
+                    📖 <strong>Concepto:</strong> ${info.desc}<br><br>
+                    👉 <a href='${JUEGO_URL}' target='_blank'>Practicar en GeoMapa</a>`;
+        }
+    </script>
+</body>
+</html>
